@@ -1,19 +1,44 @@
 'use strict';
 
-import gulp from 'gulp';
-import sass from 'gulp-sass';
-import autoprefixer from 'gulp-autoprefixer';
-import sourcemaps from 'gulp-sourcemaps';
+var autoprefixer = require('gulp-autoprefixer');
+var babel = require('gulp-babel');
+var gulp = require('gulp');
+var sass = require('gulp-sass');
+var sourcemaps = require('gulp-sourcemaps');
+var react = require('gulp-react');
 
 const dirs = {
   src: 'src',
   dest: 'build'
 };
 
-const sassPaths = {
-  src: `${dirs.src}/app.scss`,
-  dest: `${dirs.dest}/styles/`
+var jsFiles = {
+  src: 'src/js',
+  dest: 'build/js'
 };
+
+const sassPaths = {
+  src: 'src/sass',
+  dest: 'build/sass'
+};
+
+//
+gulp.task('transform', function () {
+  return gulp.src(jsFiles.src + '/*.jsx')
+        .pipe(react({harmony: false, es6module: true}))
+        .pipe(gulp.dest(jsFiles.dest));
+});
+
+gulp.task('es6', ['transform'], function () {
+  return gulp.src(jsFiles.src + '/*.js')
+        .pipe(babel())
+        .pipe(gulp.dest(jsFiles.dest));
+});
+
+gulp.task('build',['es6'], function(){
+  return gulp.src('src/html/index.html')
+        .pipe(open(), {app: 'google-chrome'});
+});
 
 gulp.task('styles', () => {
   return gulp.src(paths.src)

@@ -1,0 +1,5 @@
+#Ignore /node_modules directory
+node_modules
+
+#Ignore anything under node_modules (this might be unnecessary)
+node_module/**/*
