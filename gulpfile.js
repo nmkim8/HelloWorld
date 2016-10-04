@@ -3,6 +3,7 @@
 var autoprefixer = require('gulp-autoprefixer');
 var babel = require('gulp-babel');
 var gulp = require('gulp');
+var open = require('gulp-open');
 var sass = require('gulp-sass');
 var sourcemaps = require('gulp-sourcemaps');
 var react = require('gulp-react');
@@ -41,10 +42,14 @@ gulp.task('build',['es6'], function(){
 });
 
 gulp.task('styles', () => {
-  return gulp.src(paths.src)
+  return gulp.src(dirs.src)
     .pipe(sourcemaps.init())
-    .pipe(sass.sync().on('error', plugins.sass.logError))
+    .pipe(sass.sync().on('error', sass.logError))
     .pipe(autoprefixer())
     .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest(paths.dest));
+    .pipe(gulp.dest(dirs.dest));
+});
+
+gulp.task('default', function() {
+    gulp.start('transform', 'es6', 'build', 'styles');
 });
