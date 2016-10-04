@@ -1,10 +1,15 @@
-class Header extends React.Component {
-	
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+class App extends React.Component {
+
 	render() {
 		return (
-			<header>
-				<h1>{this.props.title}</h1>
-			</header>
-		)
+			<div>
+				Hello, World!
+			</div>
+		);
 	}
 };
+
+ReactDOM.render(<App/>, document.getElementById("app"));

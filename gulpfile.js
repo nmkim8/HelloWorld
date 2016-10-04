@@ -2,36 +2,35 @@
 
 var autoprefixer = require('gulp-autoprefixer');
 var babel = require('gulp-babel');
+var babelify = require('babelify');
+var browserify = require('browserify');
+var concat = require('gulp-concat');
 var gulp = require('gulp');
 var open = require('gulp-open');
 var sass = require('gulp-sass');
+var source = require('vinyl-source-stream');
 var sourcemaps = require('gulp-sourcemaps');
-var react = require('gulp-react');
 
 var path = {
   html: 'src/index.html',
-  js: { src: 'src/js/', dest: 'build/js' },
+  js: { src: 'src/js', dest: 'build/js' },
   sass: 'src/sass/*.sass',
   src: 'src',
   dest: 'build'
 };
 
-gulp.task('transform', function () {
-  return gulp.src(path.js.src + '/*.jsx')
-        .pipe(react({harmony: false, es6module: true}))
-        .pipe(gulp.dest(path.js.dest));
-});
-
-gulp.task('es6', ['transform'], function () {
-  return gulp.src(path.js.src + '/*.js')
-        .pipe(babel())
+gulp.task('es6', function () {
+  return browserify('src/js/app.jsx')
+        .transform('babelify', {presets: ['es2015', 'react']})
+        .bundle()
+        .pipe(source('bundle.js'))
         .pipe(gulp.dest(path.js.dest));
 });
 
 gulp.task('build',['es6'], function(){
   return gulp.src(path.html)
-        .pipe(gulp.dest(path.dest));
-        //.pipe(open(), {app: 'google-chrome'});
+        .pipe(gulp.dest(path.dest))
+        .pipe(open(), {app: 'google-chrome'});
 });
 
 gulp.task('styles', () => {
@@ -44,5 +43,5 @@ gulp.task('styles', () => {
 });
 
 gulp.task('default', function() {
-    gulp.start('transform', 'es6', 'build', 'styles');
+    gulp.start('es6', 'build', 'styles');
 });
