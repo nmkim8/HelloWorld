@@ -8,46 +8,39 @@ var sass = require('gulp-sass');
 var sourcemaps = require('gulp-sourcemaps');
 var react = require('gulp-react');
 
-const dirs = {
+var path = {
+  html: 'src/index.html',
+  js: { src: 'src/js/', dest: 'build/js' },
+  sass: 'src/sass/*.sass',
   src: 'src',
   dest: 'build'
 };
 
-var jsFiles = {
-  src: 'src/js',
-  dest: 'build/js'
-};
-
-const sassPaths = {
-  src: 'src/sass',
-  dest: 'build/sass'
-};
-
-//
 gulp.task('transform', function () {
-  return gulp.src(jsFiles.src + '/*.jsx')
+  return gulp.src(path.js.src + '/*.jsx')
         .pipe(react({harmony: false, es6module: true}))
-        .pipe(gulp.dest(jsFiles.dest));
+        .pipe(gulp.dest(path.js.dest));
 });
 
 gulp.task('es6', ['transform'], function () {
-  return gulp.src(jsFiles.src + '/*.js')
+  return gulp.src(path.js.src + '/*.js')
         .pipe(babel())
-        .pipe(gulp.dest(jsFiles.dest));
+        .pipe(gulp.dest(path.js.dest));
 });
 
 gulp.task('build',['es6'], function(){
-  return gulp.src('src/html/index.html')
-        .pipe(open(), {app: 'google-chrome'});
+  return gulp.src(path.html)
+        .pipe(gulp.dest(path.dest));
+        //.pipe(open(), {app: 'google-chrome'});
 });
 
 gulp.task('styles', () => {
-  return gulp.src(dirs.src)
-    .pipe(sourcemaps.init())
-    .pipe(sass.sync().on('error', sass.logError))
-    .pipe(autoprefixer())
-    .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest(dirs.dest));
+  return gulp.src(path.sass)
+        .pipe(sourcemaps.init())
+        .pipe(sass.sync().on('error', sass.logError))
+        .pipe(autoprefixer())
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest(path.dest));
 });
 
 gulp.task('default', function() {
