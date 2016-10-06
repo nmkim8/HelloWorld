@@ -1,10 +1,14 @@
-// import React from 'react';
-// import {Route, DefaultRoute} from 'react-router';
-// import App from 'app.jsx';
-// //import HomeIndex from './components/home/index';
+import React from 'react'
+import { Route, IndexRoute } from 'react-router'
+import { Layout } from './components/Layout';
+import { IndexPage } from './components/IndexPage';
+import { NotFoundPage } from './components/NotFoundPage';
 
-// export default (
-// 	<Route path='/' handler={App}>
-// 		<DefaultRoute handler={HomeIndex} />
-// 	</Route>
-// );
+const routes = (
+	<Route path='/' component={Layout}>
+		<IndexRoute path='/' component={IndexPage}/>
+		<Route path='*' component={NotFoundPage}/>
+	</Route>
+);
+
+export default routes;
