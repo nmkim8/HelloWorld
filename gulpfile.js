@@ -15,8 +15,10 @@ var source = require('vinyl-source-stream');
 var sourcemaps = require('gulp-sourcemaps');
 
 var path = {
-  html: 'src/index.html',
-  js: { src: 'src/js', dest: 'build/js' },
+  html: 'src/static/index.html',
+  entry: 'src/app-client.js',
+  server: 'src/server.js',
+  js: { src: 'src/components', dest: 'build/js' },
   sass: 'src/sass/*.sass',
   src: 'src',
   dest: 'build'
@@ -24,14 +26,21 @@ var path = {
 
 //var fileCache = new FileCache();
 
-gulp.task('build', () => {
+gulp.task('index', () => {
   return gulp.src(path.html)
         .pipe(gulp.dest(path.dest))
         //.pipe(open(), {app: 'google-chrome'});
 });
 
-gulp.task('bundle', ['build'], () => {
-  return browserify(path.js.src + '/app.jsx')
+gulp.task('server', () => {
+  return browserify(path.server)
+    .transform('babelify', {presets: [ 'es2015' ]})
+    .bundle()
+    .pipe(gulp.dest(path.dest));
+});
+
+gulp.task('bundle', ['index'], () => {
+  return browserify(path.entry)
         .transform('babelify', {presets: ['es2015', 'react']})
         .bundle()
         .pipe(source('bundle.js'))
@@ -44,7 +53,7 @@ gulp.task('bundle', ['build'], () => {
 //                    .pipe(cache.cache()) // cache them 
 //                    .pipe(gulp.dest('./dist')) // write them 
 
-gulp.task('styles', ['bundle', 'build'], () => {
+gulp.task('styles', () => {
   return gulp.src(path.sass)
         .pipe(sourcemaps.init())
         .pipe(sass.sync().on('error', sass.logError))
@@ -61,11 +70,11 @@ gulp.task('styles', ['bundle', 'build'], () => {
 //   })
 // })
 
-gulp.task('nodemon', ['build', 'bundle', 'styles'], (cb) => {
+gulp.task('nodemon', ['index', 'server', 'bundle', 'styles'], (cb) => {
     let called = false;
 
     return nodemon({
-        script: path.js.dest + '/bundle.js',
+        script: path.server,
         ext: 'js html',
         ignore: ['./public', 'node_modules'],
         nodeArgs: ['--harmony']
@@ -85,5 +94,5 @@ gulp.task('nodemon', ['build', 'bundle', 'styles'], (cb) => {
 
 
 gulp.task('default', function() {
-    gulp.start('build', 'bundle', 'styles', 'nodemon');
+    gulp.start('index', 'server', 'bundle', 'styles', 'nodemon');
 });

@@ -1,10 +1,9 @@
 {
   "name": "helloworld",
   "version": "0.0.2",
-  "description": "HelloWorld web app for coding challenge.",
-  "main": "gulpfile.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -12,11 +11,14 @@
   },
   "author": "Noreen Kim",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/nmkim8/HelloWorld/issues"
+  "dependencies": {
+    "express": "^4.14.0",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2"
   },
-  "homepage": "https://github.com/nmkim8/HelloWorld#readme",
   "devDependencies": {
+    "babel-core": "^6.17.0",
+    "babel-loader": "^6.2.5",
     "babel-plugin-transform-react-jsx": "^6.8.0",
     "babel-preset-es2015": "^6.16.0",
     "babel-preset-react": "^6.16.0",
@@ -34,8 +36,8 @@
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.0.4",
     "gulp-sourcemaps": "^1.5.2",
-    "react": "^15.3.2",
-    "react-dom": "^15.3.2",
+    "http-server": "^0.9.0",
+    "path": "^0.12.7",
     "react-router": "^2.8.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
