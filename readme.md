@@ -15,4 +15,4 @@ npm run build
 npm run start
 ```
 
-Hello World is hosted on localhost:3000 and can be opened [here](localhost:3000).
+Hello World is hosted on localhost:3000 and can be opened [here](http://localhost:3000).
