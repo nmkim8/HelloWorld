@@ -14,8 +14,8 @@ export class Main extends Component {
 
 				</div>
 			</div>
-		)
+		);
 	}
 }
 
-ReactDOM.render(<Main/>, document.getElementById("main"));
+//ReactDOM.render(<Main/>, document.getElementById("main"));

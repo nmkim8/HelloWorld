@@ -2,11 +2,15 @@
 
 HelloWorld web application using React for front-end, React Router for routing, and Node.js for back-end.
 
-## To use
+## Install package dependencies
 
-### Compile
-
-```NODE_ENV=production node_modules/.bin/webpack -p
+```sh
 npm install
-node_modules/.bin/http-server src/static
+```
+
+### Compile and serve locally
+
+```sh
+npm run build
+npm run start
 ```

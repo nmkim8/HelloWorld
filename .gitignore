@@ -1,11 +1,11 @@
 #Ignore /node_modules directory
 node_modules
-
-#Ignore anything under node_modules (this might be unnecessary)
 node_module/**/*
 
 #Ignore /build directory
 build
-
-#Ignore anything under build (this might be unnecessary)
 build/**/*
+
+#Ignore anything under babel_cache
+babel_cache
+babel_cache/**/*
