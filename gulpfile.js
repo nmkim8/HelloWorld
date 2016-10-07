@@ -13,20 +13,17 @@ var shell = require('gulp-shell');
 
 
 var path = {
-  server: { src: 'src/server.js', dest_File: 'src/static/js/server.js' },
   js: { entry: 'src/app-client.js', dest: 'src/static/js' },
-  sass: 'src/sass/*.sass',
-  src: 'src',
-  dest: ''
+  sass: { src: 'src/sass/*.sass', dest: 'src/static/css'}
 };
 
 gulp.task('styles', () => {
-    return gulp.src(path.sass)
+    return gulp.src(path.sass.src)
           .pipe(sourcemaps.init())
           .pipe(sass.sync().on('error', sass.logError))
           .pipe(autoprefixer())
           .pipe(sourcemaps.write('.'))
-          .pipe(gulp.dest(path.dest));
+          .pipe(gulp.dest(path.sass.dest));
 });
 
 // gulp.task('serve', function(callback) {
