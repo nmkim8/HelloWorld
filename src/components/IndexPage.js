@@ -5,7 +5,7 @@ export class IndexPage extends React.Component {
 	render() {
 		return (
 			<div className="appContainer">
-				<p>How are you doing?</p>
+				<p className="returnMessage">How are you doing?</p>
 			</div>
 		);
 	}

@@ -1,96 +1,50 @@
 'use strict';
 
 var autoprefixer = require('gulp-autoprefixer');
-var babel = require('gulp-babel');
-var babelify = require('babelify');
-var browserify = require('browserify');
-var concat = require('gulp-concat');
-var FileCache = require('gulp-file-cache')
 var gulp = require('gulp');
-var nodemon = require('gulp-nodemon');
-var open = require('gulp-open');
+var path = require('path');
 var sass = require('gulp-sass');
-var shim = require('browserify-shim');
-var source = require('vinyl-source-stream');
 var sourcemaps = require('gulp-sourcemaps');
+var shell = require('gulp-shell');
+// var gutil = require('gulp-util');
+// var webpack = require('webpack');
+// var webpackConfig = require('./webpack.config.js');
+// var WebpackDevServer = require("webpack-dev-server");
+
 
 var path = {
-  html: 'src/static/index.html',
-  server: { src: 'src/server.js', dest_File: 'src/static/js/server.js' },
   js: { entry: 'src/app-client.js', dest: 'src/static/js' },
-  sass: 'src/sass/*.sass',
-  src: 'src',
-  dest: ''
+  sass: { src: 'src/sass/*.sass', dest: 'src/static/css'}
 };
 
-//var fileCache = new FileCache();
-
-// gulp.task('index', () => {
-//   return gulp.src(path.html)
-//         .pipe(gulp.dest(path.dest))
-//         //.pipe(open(), {app: 'google-chrome'});
-// });
-
-gulp.task('server', () => {
-    return gulp.src(path.server.src)
-      .pipe('babel',({presets: [ 'es2015', 'react' ]}))
-      .pipe(gulp.dest(path.js.dest));
-});
-
-gulp.task('bundle', () => {
-    return browserify(path.entry)
-          .transform('babelify', {presets: ['es2015', 'react']})
-          .bundle()
-          .pipe(source('bundle.js'))
-          .pipe(gulp.dest(path.js.dest));
-});
-
-// gulp.src('./src/**/*.js') // your ES2015 code 
-//                    .pipe(cache.filter()) // remember files 
-//                    .pipe(babel({ ... })) // compile new ones 
-//                    .pipe(cache.cache()) // cache them 
-//                    .pipe(gulp.dest('./dist')) // write them 
-
 gulp.task('styles', () => {
-    return gulp.src(path.sass)
+    return gulp.src(path.sass.src)
           .pipe(sourcemaps.init())
           .pipe(sass.sync().on('error', sass.logError))
           .pipe(autoprefixer())
           .pipe(sourcemaps.write('.'))
-          .pipe(gulp.dest(path.dest));
+          .pipe(gulp.dest(path.sass.dest));
 });
 
-// gulp.task('nodemon', ['bundle', 'build', 'styles'], function() {
-//   nodemon({
-//     script: path.js.dest + '/bundle.js',
-//     tasks: ['bundle'], // compile synchronously onChange
-//     ext: 'js'
-//   })
-// })
+// gulp.task('serve', function(callback) {
+//    var myConfig = Object.create(webpackConfig);
 
-gulp.task('nodemon', ['server', 'bundle', 'styles'], (cb) => {
-    let called = false;
+//     new WebpackDevServer(webpack(myConfig), {
+//         stats: {
+//             colors: true
+//         }
+//     }).listen(3000, "localhost", function(err) {
+//         if(err) throw new gutil.PluginError("webpack-dev-server", err);
+//         gutil.log("[webpack-dev-server]", "http://localhost:3000/src/static");
+//     });
+// });
 
-    return nodemon({
-        script: path.server.dest_File,
-        ext: 'js html',
-        ignore: ['./public', 'node_modules'],
-        nodeArgs: ['--harmony']
-    })
-        .on('start', () => {
-            if (!called) {
-                called = true;
-                cb();
-            }
-        })
-        .on('restart', () => {
-            setTimeout(() => {
-                reload();
-            }, 500);
-        });
-});
+gulp.task('buildAndServe', shell.task([
+    "NODE_ENV=production node_modules/.bin/webpack -p",
+    "NODE_ENV=production node_modules/.bin/babel-node --presets 'react,es2015' src/server.js"
+]))
 
 
 gulp.task('default', function() {
-    gulp.start('server', 'bundle', 'styles', 'nodemon');
+    gulp.start('styles', 'buildAndServe');
 });
