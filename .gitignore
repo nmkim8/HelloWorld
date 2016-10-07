@@ -9,3 +9,6 @@ build/**/*
 #Ignore anything under babel_cache
 babel_cache
 babel_cache/**/*
+
+#Ignore gulp-cache
+.gulp-cache
